@@ -1,0 +1,27 @@
+#This is just roughly what the code will look like - actual physical testing will happen to verify and make any necessary changes
+
+from machine import Pin, PWM
+import time
+
+# Set up each servo 
+shoulder_servo = PWM(Pin(15))  # Shoulder servo on pin 15
+elbow_servo = PWM(Pin(16))     # Elbow servo on pin 16
+pen_servo = PWM(Pin(17))       # Pen servo on pin 17
+
+# Set frequency (typically 50 Hz for servos)
+shoulder_servo.freq(50)
+elbow_servo.freq(50)
+pen_servo.freq(50)
+
+# Function to send a fixed signal to each servo to test movement
+def test_servo(servo, duty):
+    servo.duty_u16(duty)  # duty is a 16-bit value (0 to 65535)
+    time.sleep(1)         # Keep the position for 1 second
+
+# Test each servo with a fixed position
+fixed_duty_cycle = 32768  # Center position (adjust if needed)
+test_servo(shoulder_servo, fixed_duty_cycle)
+test_servo(elbow_servo, fixed_duty_cycle)
+test_servo(pen_servo, fixed_duty_cycle)
+
+
