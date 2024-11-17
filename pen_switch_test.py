@@ -23,7 +23,7 @@ while True:
         else:
             print("Pen Up")
 
-        time.sleep(0.2)  # Adjust debounce time as needed for stability
+        time.sleep(0.3)  # Adjust debounce time as needed for stability
 
     time.sleep(0.05)  # Main loop delay for checking state of switch
 
