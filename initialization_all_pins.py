@@ -117,4 +117,4 @@ while True:
     print(f"Potentiometer X-axis : {position_x}, Potentiometer Y-axis : {position_y}")
 
     # Small delay to debounce the button without affecting servo control or potentiometer readings
-    time.sleep_ms(50)
+    time.sleep_ms(100)
