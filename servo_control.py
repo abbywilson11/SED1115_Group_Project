@@ -24,6 +24,11 @@ def initialize_servo(pin_num): # pin_num is of type int and represents the GPIO 
 # define a function that will move the servo to a specific angle
 def move_servo_to_angle(servo, angle): # servo is of type PWM (controlling the servo) and angle is of type int (target angle servo moves to)
 
+    # check to see if the servo can move to the angle or if it is connected properly
+    if not servo:
+        print("Error: Servo not initialized. Cannot move to angle.")
+        return
+    
     #  check to see if angle is within the desired range
     if angle < 0:
         # moves the value to the nearest available value within the upper and lower limits (0-180 degrees)
@@ -49,15 +54,18 @@ def move_servo_to_angle(servo, angle): # servo is of type PWM (controlling the s
         print("The duty cyle has been set to a maximum value.")
 
     # sends the duty cycle to the servo
-    servo.duty_u16(duty)
+    try:
+        servo.duty_u16(duty)
+        print("Servo moved to", angle, "degrees", "Duty cycle is: ", duty)
+    except Exception as e:
+        print("Error moving servo: ", e)
 
 # define a function that warns if the servos are overheating due to continuous use
-servo_start_time = time.time() # begins to track time when the servo starts moving
+# start_time = time.time() # begins to track time when the servo starts moving
 
-def check_servo_usage():
-    elapsed_time = time.time() - servo_start_time # calculates how long the servo has been active
+def check_servo_usage(start_time):
+    elapsed_time = time.time() - start_time # calculates how long the servo has been active
 
     if elapsed_time > 30: # if the servo runs for more than 30 seconds, a warning is given
-        print("Warning! Servo might be overheating, give it a rest!") 
+        print("Warning: Servo might be overheating, give it a rest!") 
         time.sleep(10) # pauses the program to allow for a 10 second cooldown
-
