@@ -5,67 +5,58 @@ import time
 x_pin = 27
 y_pin = 26
 
-def read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle):
+def read_and_convert_knob_values(x_pin, y_pin, reset_flag):
     """
-    Ownership: Antoine Boult
+    Ownership: Antoine Boult and Calib Wong
 
-    It reads the values from the x and y axis knobs and converts them to angles. It also ensures that when
-    the angles from either knobs is too low or too high, it brings it back to the home position which is both 90 degrees (Middle of the page)
-
-    Issue resolved :
-    It also ensures that it stays at the home position until you move the knobs again since when it comes back to 90 degrees, the knob are still 
-    have the values / angles that they were in before so right after it's in the home position it goes back where it was. It is now smoothed out.
+    Reads potentiometer values from the given ADC pins and converts them to angles.
 
     Args:
         x_pin (int): GPIO pin number for the x-axis knob.
         y_pin (int): GPIO pin number for the y-axis knob.
-        last_valid_x_angle (int): Last valid angle for the x-axis.
-        last_valid_y_angle (int): Last valid angle for the y-axis.
+        reset_flag (bool): Indicates whether the system is in reset mode.
 
     Returns:
-        tuple: (x_value, y_value, x_angle, y_angle)
-        - Raw knob values and angles scaled from 0 to 180 degrees. If values are invalid,
-          the function returns the home position and retains the last valid angles.
+        tuple: Raw knob values, angles (x_angle, y_angle), and reset_flag status.
     """
-
     x_knob = machine.ADC(x_pin)
     y_knob = machine.ADC(y_pin)
 
-    # Read values
+    # Read knob values
     x_value = x_knob.read_u16()
     y_value = y_knob.read_u16()
 
-    # Error handling: Keep angles at 90 degrees (home position) if values are invalid
-    if x_value < 176 or y_value < 176:
-        print("Values too low. Holding at home position.")
-        return x_value, y_value, 90, 90
+    # Check for invalid values or reset condition
+    if reset_flag:
+        # Wait for both knobs to return to 0 position (low values)
+        if x_value < 200 and y_value < 200:
+            print("Knobs returned to 0. Resuming normal operation.")
+            reset_flag = False  # Exit reset mode
+        else:
+            print(f"Waiting for knobs to return to 0. Current values - x: {x_value}, y: {y_value}")
+            return x_value, y_value, 0, 0, reset_flag
 
-    if x_value > 65535 or y_value > 65535:
-        print("Values too high. Holding at home position.")
-        return x_value, y_value, 90, 90
+    # Handle invalid values
+    if x_value > 65535 or y_value > 65535 or x_value < 176 or y_value < 176:
+        print("Invalid values detected. Resetting to 0 degrees.")
+        reset_flag = True
+        return x_value, y_value, 0, 0, reset_flag
 
-    # Scale values to angles
+    # Convert knob values to angles
     x_angle = int((x_value * 180) / 65535)
     y_angle = int((y_value * 180) / 65535)
 
-    # If angles are valid, return them
-    return x_value, y_value, x_angle, y_angle
-
-# Initialize last valid angles
-last_valid_x_angle = 90
-last_valid_y_angle = 90
+    return x_value, y_value, x_angle, y_angle, reset_flag
 
 
-# Need to add these parts to the main code
+# Initialize reset flag
+reset_flag = False
+
 while True:
-    # Get the raw values and angles from the function
-    x_value, y_value, x_angle, y_angle = read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle)
-
-    # If the angles are valid (not 90 due to an error), update the last valid angles
-    if x_angle != 90 or y_angle != 90:
-        last_valid_x_angle = x_angle
-        last_valid_y_angle = y_angle
+    # Read knob values and process angles
+    x_value, y_value, x_angle, y_angle, reset_flag = read_and_convert_knob_values(x_pin, y_pin, reset_flag)
 
     # Print the raw values and corresponding angles
-    print(f"x knob: {x_value} to {x_angle} angle, y knob: {y_value} to {y_angle} angle")
+    print(f"x knob: {x_value} → {x_angle}° angle, y knob: {y_value} → {y_angle}° angle")
 
+    time.sleep(0.05)  # Small delay for smoother updates
