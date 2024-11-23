@@ -17,7 +17,7 @@ def knob_value_to_angle(x_value, y_value):
     by bringing back to the reset position angles if any of the x or y axis knobs have values that are under 176 or over 65535.
 
     """
-    # Scale the values to the range 0-180
+    # It intifies the values from both knobs and then turns them into angles scaled from the range 0-180
     x_angle = int((x_value * 180) / 65535)
     y_angle = int((y_value * 180) / 65535)
 
