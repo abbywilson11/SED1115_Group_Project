@@ -36,8 +36,20 @@ def read_and_convert_knob_values(x_pin, y_pin, reset_flag):
             print(f"To move again, bring both knobs to 0 | Current Values: x-knob: {x_value}, y-knob: {y_value}")
             return x_value, y_value, 0, 0, reset_flag
 
-    # Handle invalid values
-    if x_value > 65535 or y_value > 65535 or x_value < 176 or y_value < 176:
+    """
+
+    Handeling the invalid values 
+
+    Intentional decision : didn't put 176 since sometimes it went down to 160 and brang back to home position a lot of times
+    I put it to 160 to make it so the experience is better because it doesn't bring it back to home position anymore for a noise issue like that
+    Smooths out the experience.
+    
+    Did the same thing for the highest value possible with the pins. I didn't put it at 65535 I wanted to widen the margin so I put to 65550
+
+    """
+
+    # Intentional decision : didn't put 176 since sometimes it went down to 160 and brang back to home position a lot of times
+    if x_value > 65550 or y_value > 65550 or x_value < 160 or y_value < 160: 
         print("Invalid values detected. Resetting to 0 degrees.")
         reset_flag = True
         return x_value, y_value, 0, 0, reset_flag
