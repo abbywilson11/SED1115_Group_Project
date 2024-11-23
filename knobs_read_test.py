@@ -12,6 +12,10 @@ def knob_value_to_angle(x_value, y_value):
 
     Converts potentiometer values to angles for servo control.
     Scales values from 0-65535 to 0-180 degrees.
+
+    Error handeling to ensure the security of the user and to prevent any equipment from breaking 
+    by bringing back to the reset position angles if any of the x or y axis knobs have values that are under 176 or over 65535.
+
     """
     # Scale the values to the range 0-180
     x_angle = int((x_value * 180) / 65535)
