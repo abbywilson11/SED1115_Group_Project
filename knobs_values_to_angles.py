@@ -55,6 +55,8 @@ def read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_
 last_valid_x_angle = 90
 last_valid_y_angle = 90
 
+
+# Need to add these parts to the main code
 while True:
     # Get the raw values and angles from the function
     x_value, y_value, x_angle, y_angle = read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle)
