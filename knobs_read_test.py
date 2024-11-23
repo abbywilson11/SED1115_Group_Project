@@ -2,42 +2,68 @@ import machine
 import time
 
 # Initialize/setup the ADC pins
-x_knob = machine.ADC(27)
-y_knob = machine.ADC(26)
+x_pin = 27
+y_pin = 26
 
-# Function to convert knob values to angles in the range 0-180 degrees
-def knob_value_to_angle(x_value, y_value):
+def read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle):
     """
-    Ownership: Antoine Boult
+    Ownership: Antoine Boult and Calib Wong
 
-    Converts potentiometer values to angles for servo control.
-    Scales values from 0-65535 to 0-180 degrees.
+    It reads the values from the x and y axis knobs and converts them to angles. It also ensures that when
+    the angles from either knobs is too low or too high, it brings it back to the home position which is both 90 degrees (Middle of the page)
 
-    Error handeling to ensure the security of the user and to prevent any equipment from breaking 
-    by bringing back to the reset position angles if any of the x or y axis knobs have values that are under 176 or over 65535.
+    Issue resolved :
+    It also ensures that it stays at the home position until you move the knobs again since when it comes back to 90 degrees, the knob are still 
+    have the values / angles that they were in before so right after it's in the home position it goes back where it was. It is now smoothed out.
 
+    Args:
+        x_pin (int): GPIO pin number for the x-axis knob.
+        y_pin (int): GPIO pin number for the y-axis knob.
+        last_valid_x_angle (int): Last valid angle for the x-axis.
+        last_valid_y_angle (int): Last valid angle for the y-axis.
+
+    Returns:
+        tuple: (x_value, y_value, x_angle, y_angle)
+        - Raw knob values and angles scaled from 0 to 180 degrees. If values are invalid,
+          the function returns the home position and retains the last valid angles.
     """
-    # It intifies the values from both knobs and then turns them into angles scaled from the range 0-180
-    x_angle = int((x_value * 180) / 65535)
-    y_angle = int((y_value * 180) / 65535)
 
-    # Error handling: reset to 90 (home position) if values are invalid
-    if not (0 <= x_value <= 65535 and 0 <= y_value <= 65535):
-        print("Invalid values detected. Resetting to home position.")
-        x_angle = 90  # Home position
-        y_angle = 90
-    return x_angle, y_angle
+    x_knob = machine.ADC(x_pin)
+    y_knob = machine.ADC(y_pin)
 
-# Main loop
-while True:
-    # Read potentiometer values
+    # Read values
     x_value = x_knob.read_u16()
     y_value = y_knob.read_u16()
 
-    # Get angles from knob values by calling the function that converts the knob values to angles
-    x_angle, y_angle = knob_value_to_angle(x_value, y_value)
+    # Error handling: Keep angles at 90 degrees (home position) if values are invalid
+    if x_value < 176 or y_value < 176:
+        print("Values too low. Holding at home position.")
+        return x_value, y_value, 90, 90
 
-    # Display values
-    print(f"x: {x_value} to angle {x_angle}, y: {y_value} to angle {y_angle}")
+    if x_value > 65535 or y_value > 65535:
+        print("Values too high. Holding at home position.")
+        return x_value, y_value, 90, 90
 
-    time.sleep(1)  # 1-second delay
+    # Scale values to angles
+    x_angle = int((x_value * 180) / 65535)
+    y_angle = int((y_value * 180) / 65535)
+
+    # If angles are valid, return them
+    return x_value, y_value, x_angle, y_angle
+
+# Initialize last valid angles
+last_valid_x_angle = 90
+last_valid_y_angle = 90
+
+while True:
+    # Get the raw values and angles from the function
+    x_value, y_value, x_angle, y_angle = read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle)
+
+    # If the angles are valid (not 90 due to an error), update the last valid angles
+    if x_angle != 90 or y_angle != 90:
+        last_valid_x_angle = x_angle
+        last_valid_y_angle = y_angle
+
+    # Print the raw values and corresponding angles
+    print(f"x knob: {x_value} to {x_angle} angle, y knob: {y_value} to {y_angle} angle")
+
