@@ -50,7 +50,7 @@ def read_and_convert_knob_values(x_pin, y_pin, reset_flag):
 
     # Intentional decision : didn't put 176 since sometimes it went down to 160 and brang back to home position a lot of times
     if x_value > 65550 or y_value > 65550 or x_value < 160 or y_value < 160: 
-        print("Invalid values detected. Resetting to 0 degrees.")
+        print(f"Resetting to home position due to invalid values. Current knobs: x={x_value}, y={y_value}")
         reset_flag = True
         return x_value, y_value, 0, 0, reset_flag
 
