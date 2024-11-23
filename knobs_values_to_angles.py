@@ -57,6 +57,6 @@ while True:
     x_value, y_value, x_angle, y_angle, reset_flag = read_and_convert_knob_values(x_pin, y_pin, reset_flag)
 
     # Print the raw values and corresponding angles
-    print(f"x knob: {x_value} → {x_angle}° angle, y knob: {y_value} → {y_angle}° angle")
+    print(f"x knob: {x_value} to {x_angle} angle, y knob: {y_value} to {y_angle} angle")
 
     time.sleep(0.05)  # Small delay for smoother updates
