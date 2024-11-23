@@ -26,14 +26,14 @@ def read_and_convert_knob_values(x_pin, y_pin, reset_flag):
     x_value = x_knob.read_u16()
     y_value = y_knob.read_u16()
 
-    # Check for invalid values or reset condition
+    # Check for reset condition
     if reset_flag:
         # Wait for both knobs to return to 0 position (low values)
         if x_value < 200 and y_value < 200:
             print("Knobs returned to 0. Resuming normal operation.")
             reset_flag = False  # Exit reset mode
         else:
-            print(f"Waiting for knobs to return to 0. Current values - x: {x_value}, y: {y_value}")
+            print(f"To move again, bring both knobs to 0 | Current Values: x-knob: {x_value}, y-knob: {y_value}")
             return x_value, y_value, 0, 0, reset_flag
 
     # Handle invalid values
