@@ -34,7 +34,7 @@ while True:
     x_value = x_knob.read_u16()
     y_value = y_knob.read_u16()
 
-    # Get angles from knob values
+    # Get angles from knob values by calling the function that converts the knob values to angles
     x_angle, y_angle = knob_value_to_angle(x_value, y_value)
 
     # Display values
