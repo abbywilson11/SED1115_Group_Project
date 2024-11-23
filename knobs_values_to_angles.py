@@ -7,7 +7,7 @@ y_pin = 26
 
 def read_and_convert_knob_values(x_pin, y_pin, last_valid_x_angle, last_valid_y_angle):
     """
-    Ownership: Antoine Boult and Calib Wong
+    Ownership: Antoine Boult
 
     It reads the values from the x and y axis knobs and converts them to angles. It also ensures that when
     the angles from either knobs is too low or too high, it brings it back to the home position which is both 90 degrees (Middle of the page)
