@@ -51,7 +51,7 @@ try:
             time.sleep(0.2)  # Debounce delay
 
         # Main loop delay (to stabilize readings)
-        time.sleep(0.05)
+        time.sleep(0.02)
 
 except KeyboardInterrupt:
     print("\nProgram terminated by user")
