@@ -5,12 +5,12 @@
 # Etch-A-Sketch Program: Combines knob (x and y axis) reading, pen switch control, and voltage verification
 
 #import libraries 
+
 import machine
 import time
-import utime
 
 #imported code that defines all of our pins 
-import initialization_all_pins
+from initialize_pins import read_potentiometers, check_pen_control, check_reset, set_servo_positions
 
 # ADC Voltage Calculation 
 def adc_voltage(adc_value):
