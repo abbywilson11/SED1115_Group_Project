@@ -136,6 +136,16 @@ def move_servo_to_angle(servo, angle):
     except Exception as e:
         print("Error moving servo:", e)
 
+# define a function that warns if the servos are overheating due to continuous use
+# start_time = time.time() # begins to track time when the servo starts moving
+
+def check_servo_usage(start_time):
+    elapsed_time = time.time() - start_time # calculates how long the servo has been active
+
+    if elapsed_time > 30: # if the servo runs for more than 30 seconds, a warning is given
+        print("Warning: Servo might be overheating, give it a rest!") 
+        time.sleep(10) # pauses the program to allow for a 10 second cooldown 
+
 # Function to read and convert potentiometer values to angles
 def read_and_convert_knob_values(x_pin, y_pin):
     x_knob = ADC(Pin(x_pin))
