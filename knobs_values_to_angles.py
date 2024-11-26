@@ -1,6 +1,11 @@
 import machine
 import time
 
+def dont_run(): 
+    raise Exception("oh no i ran it")
+
+
+
 # Initialize/setup the ADC pins
 x_pin = 27
 y_pin = 26
@@ -64,11 +69,11 @@ def read_and_convert_knob_values(x_pin, y_pin, reset_flag):
 # Initialize reset flag
 reset_flag = False
 
-while True:
-    # Read knob values and process angles
-    x_value, y_value, x_angle, y_angle, reset_flag = read_and_convert_knob_values(x_pin, y_pin, reset_flag)
+# while True:
+#     # Read knob values and process angles
+#     x_value, y_value, x_angle, y_angle, reset_flag = read_and_convert_knob_values(x_pin, y_pin, reset_flag)
 
-    # Print the raw values and corresponding angles
-    print(f"x knob: {x_value} to {x_angle} angle, y knob: {y_value} to {y_angle} angle")
-
-    time.sleep(0.05)  # Small delay for smoother updates
+#     # Print the raw values and corresponding angles
+#     print(f"x knob: {x_value} to {x_angle} angle, y knob: {y_value} to {y_angle} angle")
+# dont_run()
+#     time.sleep(0.05)  # Small delay for smoother updates

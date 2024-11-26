@@ -50,10 +50,10 @@ def initialize():
 # Example usage
 if __name__ == "__main__":
     initialize()
-    while True:
-        x_pos, y_pos = read_potentiometers()
-        pen_state = check_pen_control()
-        reset_state = check_reset()
-        set_servo_positions(x_pos, y_pos)
-        print(f"Potentiometer X-axis: {x_pos}, Potentiometer Y-axis: {y_pos}")
-        time.sleep(0.05)
+    # while True:
+    #     x_pos, y_pos = read_potentiometers()
+    #     pen_state = check_pen_control()
+    #     reset_state = check_reset()
+    #     set_servo_positions(x_pos, y_pos)
+    #     print(f"Potentiometer X-axis: {x_pos}, Potentiometer Y-axis: {y_pos}")
+    #     time.sleep(0.05)

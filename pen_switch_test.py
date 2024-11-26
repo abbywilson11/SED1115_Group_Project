@@ -25,6 +25,7 @@ def pen_switch():
             print("Pen Up")
 
         time.sleep(0.2)  # Adjust debounce time as needed for stability
-
+    
         time.sleep(0.05)  # Main loop delay for checking state of switch
 
+        return pen_down

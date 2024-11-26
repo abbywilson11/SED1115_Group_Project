@@ -35,24 +35,20 @@ def translate(angle: float) -> int:
     return duty_u16_value
 
 # define a function that will move the servo to a specific angle
-def move_servo_to_angle(servo, angle): # servo is of type PWM (controlling the servo) and angle is of type int (target angle servo moves to)
+def move_servo_to_coordinate(servo, x, y): # servo is of type PWM (controlling the servo) and angle is of type int (target angle servo moves to)
 
-    # check to see if the servo can move to the angle or if it is connected properly
-    if not servo:
-        print("Error: Servo not initialized. Cannot move to angle.")
-        return
+    # # check to see if the servo can move to the angle or if it is connected properly
+    # if not servo:
+    #     print("Error: Servo not initialized. Cannot move to angle.")
+    #     return
     
-    # check to see if angle is within the desired range
+    #  check to see if angle is within the desired range
     if angle < 0:
         # moves the value to the nearest available value within the upper and lower limits (0-180 degrees)
         print("Error: Angle is too low! Setting angle to 0 degrees.")
         angle = 0
     elif angle > 180:
         print("Error: Angle is too high! Setting angle to 180 degrees.")
-        angle = 180
-
-    # Calculates duty cycle using the translate function
-    duty = translate(angle)
 
     # maps the angle to a duty cycle (research typical ranges for better idea)
     # min_duty_cycle = 1000 # matches with 0 degrees lower limit
