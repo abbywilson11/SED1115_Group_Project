@@ -5,6 +5,7 @@ import machine
 import time
 from servo_control import *
 from inverse_kinematics import *
+
 # ADC Voltage Calculation
 def adc_voltage(adc_value):
     return (adc_value / 65535) * 3.3  # Convert ADC reading to voltage (assuming a 3.3V Pico)
