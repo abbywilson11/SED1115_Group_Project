@@ -1,9 +1,16 @@
-from servo_control import initialize_servo, move_servo_to_angle, translate, check_servo_usage
+# GP 0 is shoulder
+# GP 1 is elbow 
+# GP 2 is pen
+
+# left knob controls elbow 
+# right knob will control shoulder
+
+from servo_control import *
 import time
 
 def test_initialize_servo():
     print("Testing Servo Initialization...")
-    servo = initialize_servo(15)  # Replace with the correct GPIO pin
+    servo = initialize_servo(1)  # Replace with the correct GPIO pin
     if servo:
         print("Servo initialization passed.")
     else:
@@ -17,7 +24,7 @@ def test_translate():
 
 def test_move_servo():
     print("Testing Servo Movement...")
-    servo = initialize_servo(15)
+    servo = initialize_servo(1)
     if not servo:
         print("Servo not initialized, skipping move tests.")
         return
@@ -26,7 +33,7 @@ def test_move_servo():
 
 def test_check_servo_usage():
     print("Testing Continuous Usage and Overheating Warning...")
-    servo = initialize_servo(15)
+    servo = initialize_servo(1)
     if not servo:
         print("Servo not initialized, skipping usage tests.")
         return
