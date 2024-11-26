@@ -134,7 +134,10 @@ def test_potentiometer_servo_integration():
 if __name__ == "__main__":
     print("Starting tests...")
     test_translate()
-    test_potentiometer_to_angle()
-    test_servo_movement()
-    test_potentiometer_servo_integration()
-    print("All tests completed successfully!")
+    while True:
+        test_potentiometer_to_angle()
+        time.sleep(1)
+
+test_servo_movement()
+    #test_potentiometer_servo_integration()
+ print("All tests completed successfully!")

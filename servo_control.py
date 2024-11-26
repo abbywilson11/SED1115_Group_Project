@@ -164,8 +164,8 @@ def read_and_convert_knob_values(x_pin, y_pin):
 # Main script
 if __name__ == "__main__":
     # Initialize servos
-    servo_x = initialize_servo(15)  # Replace with GPIO pin for x-axis servo
-    servo_y = initialize_servo(16)  # Replace with GPIO pin for y-axis servo
+    servo_x = initialize_servo(0)  # Replace with GPIO pin for x-axis servo
+    servo_y = initialize_servo(1)  # Replace with GPIO pin for y-axis servo
 
     # Initialize potentiometer pins
     x_pot_pin = 26  # Replace with ADC pin for x-axis potentiometer
