@@ -140,4 +140,4 @@ if __name__ == "__main__":
 
 test_servo_movement()
     #test_potentiometer_servo_integration()
- print("All tests completed successfully!")
+print("All tests completed successfully!")
