@@ -20,6 +20,19 @@ def initialize_servo(pin_num): # pin_num is of type int and represents the GPIO 
         
         return None
 
+# translate function for angle-to-duty cycle conversion
+def translate(angle: float) -> int:
+    # Converts angle to PWM in microseconds
+    pulse_width = 500 + (2500 - 500) * angle / 180  # Typical servo range: 500us (0°) to 2500us (180°)
+    
+    # Calculates duty cycle for 20ms period
+    duty_cycle = pulse_width / 20000
+    
+    # Scales to 16-bit value and clamp to safe limits
+    duty_u16_value = int(duty_cycle * 65535)
+    duty_u16_value = max(2300, min(7500, duty_u16_value))  # Clamp between safe limits
+    
+    return duty_u16_value
 
 # define a function that will move the servo to a specific angle
 def move_servo_to_angle(servo, angle): # servo is of type PWM (controlling the servo) and angle is of type int (target angle servo moves to)
@@ -29,29 +42,43 @@ def move_servo_to_angle(servo, angle): # servo is of type PWM (controlling the s
         print("Error: Servo not initialized. Cannot move to angle.")
         return
     
-    #  check to see if angle is within the desired range
+    # check to see if angle is within the desired range
     if angle < 0:
         # moves the value to the nearest available value within the upper and lower limits (0-180 degrees)
         print("Error: Angle is too low! Setting angle to 0 degrees.")
         angle = 0
     elif angle > 180:
         print("Error: Angle is too high! Setting angle to 180 degrees.")
+        angle = 180
+
+    # Calculates duty cycle using the translate function
+    duty = translate(angle)
 
     # maps the angle to a duty cycle (research typical ranges for better idea)
-    min_duty_cycle = 1000 # matches with 0 degrees lower limit
-    max_duty_cyle = 9000 # matches with 180 degrees upper limit
+    # min_duty_cycle = 1000 # matches with 0 degrees lower limit
+    # max_duty_cyle = 9000 # matches with 180 degrees upper limit
 
     # calculated duty cycle
-    duty = int(min_duty_cycle + (angle/180) * (max_duty_cyle-min_duty_cycle))
+    # duty = int(min_duty_cycle + (angle/180) * (max_duty_cyle-min_duty_cycle))
 
     # check to see if duty cycle is within range by clamping to limits
-    if duty < min_duty_cycle:
-        duty = min_duty_cycle
-        print("The duty cyle has been set to a minimum value.")
+    # if duty < min_duty_cycle:
+        # duty = min_duty_cycle
+        # print("The duty cyle has been set to a minimum value.")
     
-    elif duty > max_duty_cyle:
-        duty = max_duty_cyle
-        print("The duty cyle has been set to a maximum value.")
+    # elif duty > max_duty_cyle:
+        # duty = max_duty_cyle
+        # print("The duty cyle has been set to a maximum value.")
+
+
+    # duty = translate(angle)
+    # def translate (angle: float) -> int:
+    # pulse_width = 500 + (2500-500) * angle / 180 #pulse width equation
+    # duty_cycle = pulse_width / 20000 # 20000 microseconds / 20ms
+    # duty_u16_value = int(duty_cycle * 65535) # multiply so it is in pwm class
+    # duty_u16_cycle = max(2300, min(7500, duty_u16_value)) # clamps down value
+    # return duty_u16_value
+
 
     # sends the duty cycle to the servo
     try:
