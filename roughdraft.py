@@ -11,6 +11,14 @@ import time
 
 #imported code that defines all of our pins 
 from initialize_pins import read_potentiometers, check_pen_control, check_reset, set_servo_positions
+# import pen_switch_test
+from pen_switch_test import pen_switch
+# import knobs_values_to_angles
+from knobs_values_to_angles import read_and_convert_knob_values
+# import servo_control
+from servo_control import initialize_servo, move_servo_to_angle, check_servo_usage
+
+
 
 # ADC Voltage Calculation 
 def adc_voltage(adc_value):
@@ -51,7 +59,7 @@ try:
             time.sleep(0.2)  # Debounce delay
 
         # Main loop delay (to stabilize readings)
-        time.sleep(0.05)
+        time.sleep(0.02)
 
 except KeyboardInterrupt:
     print("\nProgram terminated by user")
