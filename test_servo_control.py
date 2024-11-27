@@ -48,7 +48,7 @@ import time
 
 # Import functions from your servo code
 # Replace 'servo_control' with the actual name of your Python file (without .py)
-from servo_control import initialize_servo, translate, move_servo_to_angle, read_and_convert_knob_values
+from servo_control import *
 
 # Test Function Definitions
 def test_translate():
@@ -138,6 +138,6 @@ if __name__ == "__main__":
         test_potentiometer_to_angle()
         time.sleep(1)
 
-test_servo_movement()
-    #test_potentiometer_servo_integration()
-print("All tests completed successfully!")
+        test_servo_movement()
+        test_potentiometer_servo_integration()
+    print("All tests completed successfully!")
