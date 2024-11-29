@@ -161,6 +161,36 @@ def read_and_convert_knob_values(x_pin, y_pin):
     
     return x_angle, y_angle
 
+
+# Main loop to control servos using potentiometers
+try:
+    start_time = time.time()  # Start time for servo usage
+    while True:
+        # Read and smooth potentiometer values
+        x_value = smooth_adc_read(ADC(Pin(x_pot_pin)))
+        y_value = smooth_adc_read(ADC(Pin(y_pot_pin)))
+
+        # Map values to angles
+        x_angle = int((x_value / 65535) * 180)
+        y_angle = int((y_value / 65535) * 180)
+        
+        print(f"Potentiometer values: X={x_value}, Y={y_value} | Angles: X={x_angle}°, Y={y_angle}°")
+        
+        # Move servos
+        move_servo_to_angle(servo_x, x_angle)
+        move_servo_to_angle(servo_y, y_angle)
+
+        # Check for overheating
+        check_servo_usage(start_time)
+
+        # Delay for smooth operation
+        time.sleep(0.2)
+
+except KeyboardInterrupt:
+    print("Program terminated.")
+
+
+'''
 # Main script
 if __name__ == "__main__":
     # Initialize servos
@@ -186,3 +216,4 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         print("Program terminated.")
+'''
