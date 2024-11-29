@@ -4,8 +4,6 @@ import time
 def dont_run(): 
     raise Exception("oh no i ran it")
 
-
-
 # Initialize/setup the ADC pins
 x_pin = 27
 y_pin = 26
