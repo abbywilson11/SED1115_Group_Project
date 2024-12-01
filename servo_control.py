@@ -132,7 +132,7 @@ def move_servo_to_angle(servo, angle):
 
     try:
         servo.duty_u16(duty)
-        print(f"Servo moved to {angle}° | Duty cycle: {duty}")
+        print(f"Servo moved to {angle} | Duty cycle: {duty}")
     except Exception as e:
         print("Error moving servo:", e)
 
