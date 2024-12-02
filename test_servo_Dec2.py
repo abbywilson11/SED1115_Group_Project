@@ -104,7 +104,7 @@ try:
         move_servo_to_angle(servo_shoulder, shoulder_angle)
         move_servo_to_angle(servo_elbow, elbow_angle)
 
-        time.sleep(0.1)  # Delay for smooth operation
+        time.sleep(0.2)  # Delay for smooth operation
 
 except KeyboardInterrupt:
     print("Program terminated.")
