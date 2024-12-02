@@ -49,6 +49,7 @@ try:
     # Initialize servos
     servo_x = initialize_servo(0)  # Replace with GPIO pin for x-axis servo
     servo_y = initialize_servo(1)  # Replace with GPIO pin for y-axis servo
+    servo_pen = initialize_servo(2) # Replace with GPIO pin for the wrist servo
 
     # Initialize potentiometer pins
     x_pot_pin = 26  # Replace with ADC pin for x-axis potentiometer
