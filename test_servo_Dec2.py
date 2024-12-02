@@ -6,35 +6,41 @@ import time
 L1, L2 = 155, 155
 
 # Function to compute inverse kinematics
-def inverse_kinematics(x, y):
-    """Compute shoulder (θ1) and elbow (θ2) angles for given (x, y) position."""
-    d = math.sqrt(x**2 + y**2)
-    if d > (L1 + L2):
-        # Clamp the point to the reachable range
-        x = x * (L1 + L2) / d
-        y = y * (L1 + L2) / d
-        d = L1 + L2
+def calculate_inverse_kinematics(Cx, Cy):
+    """
+    Calculate the joint angles (shoulder and elbow) for the robotic arm
+    based on the target coordinates (Cx, Cy).
+    """
+    d = math.sqrt(Cx**2 + Cy**2)  # Distance from the base to the target
 
-    cos_theta2 = (x**2 + y**2 - L1**2 - L2**2) / (2 * L1 * L2)
-    if abs(cos_theta2) > 1:
+    if d > (L1 + L2) or d < abs(L1 - L2):
+        # Point is unreachable
         return None, None
 
-    theta2 = math.acos(cos_theta2)
+    # Calculate angles using the law of cosines
+    cos_theta2 = (Cx**2 + Cy**2 - L1**2 - L2**2) / (2 * L1 * L2)
+    theta2 = math.acos(cos_theta2)  # Elbow angle
+
+    # Angle for the shoulder
     k1 = L1 + L2 * math.cos(theta2)
     k2 = L2 * math.sin(theta2)
-    theta1 = math.atan2(y, x) - math.atan2(k2, k1)
+    theta1 = math.atan2(Cy, Cx) - math.atan2(k2, k1)
 
-    return math.degrees(theta1), math.degrees(theta2)
+    # Convert to degrees for servos
+    servoA_angle = math.degrees(theta1)
+    servoB_angle = math.degrees(theta2)
+
+    return servoA_angle, servoB_angle
 
 # Function to initialize the servos
 def initialize_servo(pin_num):
     try:
         servo = PWM(Pin(pin_num))
         servo.freq(50)
-        print("Servo initialized on Pin:", pin_num)
+        print(f"Servo initialized on Pin: {pin_num}")
         return servo
     except Exception as e:
-        print("Error initializing servo on pin", pin_num, ":", e)
+        print(f"Error initializing servo on pin {pin_num}: {e}")
         return None
 
 # Function to translate an angle to a duty cycle
@@ -55,9 +61,9 @@ def move_servo_to_angle(servo, angle):
     duty = translate(angle)
     try:
         servo.duty_u16(duty)
-        print(f"Servo moved to {angle}° | Duty cycle: {duty}")
+        print(f"Servo moved to {angle:.2f}° | Duty cycle: {duty}")
     except Exception as e:
-        print("Error moving servo:", e)
+        print(f"Error moving servo: {e}")
 
 # Function to map potentiometer values to coordinates
 def map_potentiometer_to_coordinates(value, min_val, max_val, min_coord, max_coord):
@@ -80,6 +86,11 @@ try:
     # Coordinate range (workspace of the arm)
     coord_min, coord_max = -310, 310  # Adjust based on arm reach
 
+    # Paper boundaries (adjust based on the actual dimensions of your workspace)
+    x_min, x_max = -150, 150
+    y_min, y_max = 0, 200
+
+    # Main loop to control servos based on potentiometer inputs
     while True:
         # Read potentiometer values
         x_value = x_pot.read_u16()
@@ -91,18 +102,24 @@ try:
 
         print(f"Potentiometer values: X={x_value}, Y={y_value} | Coordinates: X={x_coord}, Y={y_coord}")
 
-        # Compute inverse kinematics
-        angles = inverse_kinematics(x_coord, y_coord)
-        if angles is None or None in angles:
-            print("Skipping unreachable point.")
-            continue
+        # Check if the coordinates are within bounds
+        if x_min <= x_coord <= x_max and y_min <= y_coord <= y_max:
+            print("Coordinates are within bounds.")
 
-        shoulder_angle, elbow_angle = angles
-        print(f"Target angles: Shoulder={shoulder_angle:.2f}°, Elbow={elbow_angle:.2f}°")
+            # Compute inverse kinematics
+            angles = calculate_inverse_kinematics(x_coord, y_coord)
+            if angles is None or None in angles:
+                print("Point is unreachable, skipping...")
+                continue
 
-        # Move servos to calculated angles
-        move_servo_to_angle(servo_shoulder, shoulder_angle)
-        move_servo_to_angle(servo_elbow, elbow_angle)
+            shoulder_angle, elbow_angle = angles
+            print(f"Target angles: Shoulder={shoulder_angle:.2f}°, Elbow={elbow_angle:.2f}°")
+
+            # Move servos to calculated angles
+            move_servo_to_angle(servo_shoulder, shoulder_angle)
+            move_servo_to_angle(servo_elbow, elbow_angle)
+        else:
+            print("Coordinates are out of bounds. No movement performed.")
 
         time.sleep(0.2)  # Delay for smooth operation
 
