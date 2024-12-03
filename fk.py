@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
@@ -8,8 +9,8 @@ L1, L2 = 155, 155
 # Forward Kinematics Function
 def forward_kinematics(theta1, theta2):
     """Calculate the position of the end effector (x, y) using forward kinematics."""
-    x = L1 * np.cos(theta1) + L2 * np.cos(theta1 + theta2)
-    y = L1 * np.sin(theta1) + L2 * np.sin(theta1 + theta2)
+    x = L1 * math.cos(theta1) + L2 * math.cos(theta1 + theta2)
+    y = L1 * math.sin(theta1) + L2 * math.sin(theta1 + theta2)
     return x, y
 
 # Plotting Function
