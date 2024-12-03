@@ -75,12 +75,6 @@ def move_servo_to_angle(servo, angle):
     except Exception as e:
         print(f"Error moving servo: {e}")
 
-# Clamps a value "input" between top and bottom
-def clamp(input, top, bottom):
-    if (input > top): return top
-    if (input < bottom): return bottom 
-    return input
-
 # Function to map potentiometer values to coordinates
 def map_potentiometer_to_coordinates(value, min_val, max_val, min_coord, max_coord):
     """Map potentiometer values to coordinates."""
