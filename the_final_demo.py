@@ -70,7 +70,7 @@ def move_servo_to_angle(servo, angle):
         print("Error: Servo not initialized.")
         return
     
-    angle = max(0, min(215, angle))
+    angle = max(0, min(215, angle)) #min and max angles for servo
     duty = translate(angle)
     try:
         servo.duty_u16(duty) # move servo to desired angle 
